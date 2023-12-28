@@ -1,0 +1,16 @@
+
+{% load my_tags %}
+<div class="col-md-4">
+          <div class="card mb-4 box-shadow">
+            <img class="card-img-top"
+                 {#src="/media/{{ object.photo }}"#}
+                 src="{{ object.photo|mymedia }}"
+                 alt="Card image cap">
+            <div class="card-body">
+              <p class="card-text">{{ object.name | title }}
+                <p class="card-text">{{ object.description | truncatechars:100 }}</p>
+
+                <p class="card-text">цена: {{ object.price }}</p>
+            </div>
+          </div>
+        </div>

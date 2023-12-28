@@ -1,0 +1,33 @@
+
+{% load my_tags %}
+
+<div class="col-md-4">
+
+          <div class="card mb-4 box-shadow">
+              <div class="card-header">
+                  <div>
+                      Product: {{ object.pk }}
+                  </div>
+              </div>
+            <img class="card-img-top"
+                 src="{{ object.photo|mymedia }}"
+                 alt="Card image cap">
+            <div class="card-body">
+              <p class="card-text">{{ object.name | title }}
+                <p class="card-text">{{ object.description | truncatechars:100 }}</p>
+
+                <p class="card-text">цена: {{ object.price }}</p>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{% url 'catalog:view_product' object.pk %}"
+                    class="btn btn-sm btn-outline-secondary">View</a>
+                  <a href="{% url 'catalog:update_product' object.pk %}"
+                    class="btn btn-sm btn-outline-secondary">Edit</a>
+                  <a href="{% url 'catalog:delete_product' object.pk%}"
+                    class="btn btn-sm btn-outline-danger">Delete</a>
+                </div>
+            </div>
+          </div>
+        </div>
