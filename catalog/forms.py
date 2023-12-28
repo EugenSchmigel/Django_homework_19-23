@@ -38,7 +38,7 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-class MProductForm(forms.ModelForm):
+class ProductModeratorForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ('name', 'description', 'category')

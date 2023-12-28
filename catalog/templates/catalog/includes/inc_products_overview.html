@@ -23,8 +23,10 @@
                 <div class="btn-group">
                   <a href="{% url 'catalog:view_product' object.pk %}"
                     class="btn btn-sm btn-outline-secondary">View</a>
+
                   <a href="{% url 'catalog:update_product' object.pk %}"
                     class="btn btn-sm btn-outline-secondary">Edit</a>
+
                   <a href="{% url 'catalog:delete_product' object.pk%}"
                     class="btn btn-sm btn-outline-danger">Delete</a>
                 </div>

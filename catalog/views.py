@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DeleteView, UpdateView, CreateView, DetailView
 
-from catalog.forms import ProductForm, VersionForm, MProductForm
+from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Category, Version
 
 
@@ -67,7 +67,6 @@ class ProductDetailView(DetailView):
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    permission_required = ['catalog.set_is_published', 'catalog.set_description', 'catalog.set_category']
     success_url = reverse_lazy('catalog:product_list')
 
     def form_valid(self, form):
@@ -82,7 +81,15 @@ class ProductCreateView(CreateView):
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
+    permission_required = ['catalog.set_is_published', 'catalog.set_description', 'catalog.set_category']
     success_url = reverse_lazy('catalog:product_list')
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        if self.object.user != self.request.user and not self.request.user.is_staff:
+            raise Http404
+        return self.object
+
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -92,6 +99,7 @@ class ProductUpdateView(UpdateView):
         else:
             context_data['formset'] = VersionFormset(instance=self.object)
         return context_data
+
 
     def form_valid(self, form):
         formset = self.get_context_data()['formset']
@@ -103,16 +111,9 @@ class ProductUpdateView(UpdateView):
         self.object.save()
         return super().form_valid(form)
 
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        if (self.request.user != self.object.user and not self.request.user.is_staff
-                and not self.request.user.is_superuser and self.request.user.has_perm('catalog.product_published')):
-            raise Http404
-        return self.object
-
     def get_form_class(self):
         if self.request.user.has_perm('catalog.product_published'):
-            return MProductForm
+            return ProductModeratorForm
         return ProductForm
 
 
