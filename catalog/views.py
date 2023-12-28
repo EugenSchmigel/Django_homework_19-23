@@ -6,6 +6,7 @@ from django.views.generic import TemplateView, ListView, DeleteView, UpdateView,
 
 from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Category, Version
+from catalog.services import cache_category
 
 
 class IndexView(TemplateView):
@@ -76,6 +77,9 @@ class ProductCreateView(CreateView):
             new_product.save()
 
         return super().form_valid(form)
+
+    def get_queryset(self):
+        return cache_category()
 
 
 class ProductUpdateView(UpdateView):
